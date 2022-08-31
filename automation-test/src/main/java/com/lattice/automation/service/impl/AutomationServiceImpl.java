@@ -32,7 +32,7 @@ public class AutomationServiceImpl implements AutomationService {
     private Map<String,File> pomMap;
 
     @Override
-    public ResponseEntity<?> automateProjectFile(final MultipartFile multipartFile) throws IOException, GenericException {
+    public ResponseEntity<?> automateProjectFile(final MultipartFile multipartFile) throws IOException, GenericException, InterruptedException {
         var unzippedDir= unzipProjectFile(uploadZipProjectFile(multipartFile));
         var process= runProjectFile(unzippedDir);
         System.out.println(process);
@@ -81,13 +81,14 @@ public class AutomationServiceImpl implements AutomationService {
     }
 
     @Override
-    public File runProjectFile(final File destinationProjectDir) throws IOException {
+    public File runProjectFile(final File destinationProjectDir) throws IOException, InterruptedException {
         searchPomFile(destinationProjectDir);
         var pomPath=pomMap.get(pomMap.keySet().stream().filter(key->destinationProjectDir.getAbsolutePath().contains(key)).collect(Collectors.toList()).get(0));
         System.out.println("Shiv-"+pomPath.getAbsolutePath());
-        Process process=Runtime.getRuntime().exec("mvn -f "+pomPath.getAbsolutePath()+" clean install");
-        System.out.println("end exc");
-        System.out.println(process.exitValue());
+        Process process=Runtime.getRuntime().exec("mvn -f "+pomPath.getAbsolutePath()+" spring-boot:run");
+//        System.out.println("end exc"+process.waitFor());
+        System.out.println("process.exitValue()-"+process.pid());
+//        process.destroy();
         System.out.println("end-"+pomMap);
         return null;
     }

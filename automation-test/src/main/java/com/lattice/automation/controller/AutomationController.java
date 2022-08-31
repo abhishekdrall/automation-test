@@ -18,7 +18,7 @@ public class AutomationController {
     private AutomationService automationService;
 
     @PostMapping(value = "/automate",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadZipProjectFile(@RequestParam("file") final MultipartFile multipartFile) throws IOException, GenericException {
+    public ResponseEntity<?> uploadZipProjectFile(@RequestParam("file") final MultipartFile multipartFile) throws IOException, GenericException, InterruptedException {
         return automationService.automateProjectFile(multipartFile);
     }
 }

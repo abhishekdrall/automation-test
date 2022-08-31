@@ -1,0 +1,30 @@
+# server config
+server:
+  port: 8000
+  tomcat:
+    max-swallow-size: -1
+spring:
+  ## MULTIPART (MultipartProperties)
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+      resolve-lazily: true
+
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+logging:
+  file:
+    name: /home/automation-test-logs/automation.log
+  pattern:
+    file: =%d [%level] %c{1.} [%t] %m%n
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 10
+      file-name-pattern: /home/automation-test-logs/automation.%d{yyyy-MM-dd}.%i.log
+

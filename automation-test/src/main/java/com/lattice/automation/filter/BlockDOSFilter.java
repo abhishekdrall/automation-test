@@ -17,6 +17,9 @@ import java.util.Map;
 
 @Component
 @Slf4j
+/**
+ * handle DOS attack
+ */
 public class BlockDOSFilter extends OncePerRequestFilter {
     private int maxHits=20;
     private long duringTimeIntervalInMS=5*1000;

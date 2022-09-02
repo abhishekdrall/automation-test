@@ -11,5 +11,5 @@ public interface AutomationService {
     ResponseEntity<?> automateProjectFile(final MultipartFile multipartFile) throws IOException, GenericException, InterruptedException;
     File uploadZipProjectFile(final MultipartFile multipartFile) throws GenericException, IOException;
     File unzipProjectFile(final File zipFilePath) throws IOException;
-    File runProjectFile(final File destinationProjectDir) throws IOException, InterruptedException;
+    File runProjectFile(final File destinationProjectDir) throws IOException, InterruptedException, GenericException;
 }

@@ -1,6 +1,7 @@
 package com.lattice.automation.service.impl;
 
 import com.lattice.automation.exception.GenericException;
+import com.lattice.automation.model.ProcessStatus;
 import com.lattice.automation.service.AutomationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -24,6 +28,9 @@ import java.util.zip.ZipFile;
 @Service
 @Slf4j
 public class AutomationServiceImpl implements AutomationService {
+
+    @Autowired
+    private Map<String, ProcessStatus> processStatusMap;
 
     @Autowired
     private Path path;
@@ -41,12 +48,14 @@ public class AutomationServiceImpl implements AutomationService {
 
     @Override
     public File uploadZipProjectFile(final MultipartFile multipartFile) throws GenericException, IOException {
-        var key=UUID.randomUUID().toString();
-        pomMap.put(key,null);
-        var path= Paths.get(this.path.toFile().getAbsolutePath(),key);
         path.toFile().mkdirs();
         if(multipartFile.isEmpty())
             throw new GenericException(HttpStatus.NOT_ACCEPTABLE.value(),"File cannot to be empty");
+        if(!multipartFile.getOriginalFilename().endsWith(".zip"))
+            throw new GenericException(HttpStatus.NOT_ACCEPTABLE.value(),"Only zip file will be acceptable");
+        var key=UUID.randomUUID().toString();
+        pomMap.put(key,null);
+        var path= Paths.get(this.path.toFile().getAbsolutePath(),key);
         log.info(multipartFile.getOriginalFilename());
         Files.copy(multipartFile.getInputStream(),path.resolve(multipartFile.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
         log.info("Downloaded path-"+path.resolve(multipartFile.getOriginalFilename()).toFile().getAbsolutePath());
@@ -81,12 +90,15 @@ public class AutomationServiceImpl implements AutomationService {
     }
 
     @Override
-    public File runProjectFile(final File destinationProjectDir) throws IOException, InterruptedException {
+    public File runProjectFile(final File destinationProjectDir) throws IOException, InterruptedException, GenericException {
         searchPomFile(destinationProjectDir);
         var pomPath=pomMap.get(pomMap.keySet().stream().filter(key->destinationProjectDir.getAbsolutePath().contains(key)).collect(Collectors.toList()).get(0));
-        System.out.println("Shiv-"+pomPath.getAbsolutePath());
+        if(pomPath==null)
+            throw new GenericException(HttpStatus.NOT_ACCEPTABLE.value(),"In this project cannot have Pom.xml file");
+        processStatusMap.values().stream().filter(processStatus -> processStatus.getProcess().isAlive()).collect(Collectors.toList())
+                .stream().forEach(processStatus -> processStatus.getProcess().destroyForcibly());
         Process process=Runtime.getRuntime().exec("mvn -f "+pomPath.getAbsolutePath()+" spring-boot:run");
-//        System.out.println("end exc"+process.waitFor());
+        processStatusMap.put(pomMap.keySet().stream().filter(key->destinationProjectDir.getAbsolutePath().contains(key)).collect(Collectors.toList()).get(0),new ProcessStatus(process,false));
         System.out.println("process.exitValue()-"+process.pid());
 //        process.destroy();
         System.out.println("end-"+pomMap);
@@ -106,12 +118,9 @@ public class AutomationServiceImpl implements AutomationService {
             }
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        var p=new File("E:\\Lattice tasks\\Projects\\automation-test\\automation-test\\assignments\\df6e803a-4db6-4dce-b1be-0c3a0d49ef57\\lattice-decryptor\\lattice-decryptor\\lattice-decryptor");
-        var cmd="mvn clean install";
-        System.out.println(cmd);
-        Process process=Runtime.getRuntime().exec("sudo jenkins",null,p);
-        int exitCode= process.waitFor();
-        System.out.println(exitCode);
+    public static void main(String[] args) throws IOException, InterruptedException, SQLException {
+        System.out.println("Connection begin");
+        var connection= DriverManager.getConnection("jdbc:mysql://139.59.6.59:3306","root","root");
+        System.out.println("Connection success-"+connection);
     }
 }

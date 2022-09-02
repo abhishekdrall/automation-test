@@ -1,7 +1,9 @@
 package com.lattice.automation.beans;
 
+import com.lattice.automation.model.ProcessStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -20,7 +22,17 @@ public class Beans {
     }
 
     @Bean
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
+    }
+
+    @Bean
     public Map<String,File> mapPomFile(){
         return new HashMap<String,File>();
+    }
+
+    @Bean
+    public Map<String, ProcessStatus> processBean(){
+        return new HashMap<String,ProcessStatus>();
     }
 }

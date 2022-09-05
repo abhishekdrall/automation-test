@@ -54,8 +54,6 @@ public class AutomationServiceImpl implements AutomationService {
         pomMap.put(key,null);
         var path= Paths.get(this.path.toFile().getAbsolutePath(),key);
         path.toFile().mkdirs();
-        log.info("Shiv1-"+multipartFile.getOriginalFilename());
-        log.info("Shiv2-"+path.resolve(multipartFile.getOriginalFilename()));
         Files.copy(multipartFile.getInputStream(),path.resolve(multipartFile.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
         log.info("Downloaded path-"+path.resolve(multipartFile.getOriginalFilename()).toFile().getAbsolutePath());
         return path.resolve(multipartFile.getOriginalFilename()).toFile();

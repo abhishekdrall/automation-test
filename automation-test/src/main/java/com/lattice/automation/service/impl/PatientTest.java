@@ -23,6 +23,24 @@ public class PatientTest {
 
     public PatientTest(List<TestReport> testReports) {
         this.testReports = testReports;
+        this.testCaseResults=testReports.get(0).getTestCaseResults();
+    }
+
+    public ResponseEntity<?> getTestCaseReport(){
+        test1();
+        test2();
+        test3();
+        test4();
+        test5();
+        test6();
+        test7();
+        test8();
+        test9();
+        test10();
+        test11();
+        test12();
+        test13();
+        return ResponseEntity.status(HttpStatus.OK).body(testReports);
     }
 
     /**

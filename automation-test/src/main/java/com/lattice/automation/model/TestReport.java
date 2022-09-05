@@ -1,10 +1,12 @@
 package com.lattice.automation.model;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Builder
 public class TestReport {
     private String moduleName;
     private List<TestCaseResult> testCaseResults;

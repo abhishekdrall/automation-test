@@ -1,8 +1,10 @@
 package com.lattice.automation.model;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
+@Getter
+@Builder
 public class TestCaseResult {
     private String testCaseName;
     private String status;

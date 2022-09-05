@@ -17,18 +17,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(GenericException.class)
     public ResponseEntity<?> handlerGenericException(GenericException genericException){
         log.error(genericException.getMessage());
+        genericException.printStackTrace();
         return ResponseEntity.status(genericException.getStatusCode()).body(genericException.getMessage());
     }
 
     @ExceptionHandler(IOException.class)
     public ResponseEntity<?> handlerIOException(IOException ioException){
         log.error(ioException.getMessage());
+        ioException.printStackTrace();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ioException.getMessage());
     }
 
     @ExceptionHandler(SQLException.class)
     public ResponseEntity<?> handlerSQLException(SQLException sqlException){
         log.error(sqlException.getMessage());
+        sqlException.printStackTrace();
         return ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY).body(sqlException.getMessage());
     }
 }

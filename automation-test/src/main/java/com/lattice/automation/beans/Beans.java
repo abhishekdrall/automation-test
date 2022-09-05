@@ -43,4 +43,5 @@ public class Beans {
     public Connection connection() throws SQLException {
         return DriverManager.getConnection("jdbc:mysql://139.59.6.59:3306/assignment","shiv","uP$4.wX2bhJW5Dqdgfthdx#");
     }
+
 }

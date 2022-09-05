@@ -6,10 +6,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public interface AutomationService {
-    ResponseEntity<?> automateProjectFile(final MultipartFile multipartFile) throws IOException, GenericException, InterruptedException;
+    ResponseEntity<?> automateProjectFile(final MultipartFile multipartFile) throws IOException, GenericException, InterruptedException, SQLException;
     File uploadZipProjectFile(final MultipartFile multipartFile) throws GenericException, IOException;
     File unzipProjectFile(final File zipFilePath) throws IOException;
-    File runProjectFile(final File destinationProjectDir) throws IOException, InterruptedException, GenericException;
+    ResponseEntity<?> runProjectFile(final File destinationProjectDir) throws IOException, InterruptedException, GenericException, SQLException;
 }

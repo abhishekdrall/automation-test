@@ -12,8 +12,6 @@ spring:
       max-file-size: 1024MB
       max-request-size: 1024MB
       resolve-lazily: true
-
-
   mvc:
     pathmatch:
       matching-strategy: ant-path-matcher

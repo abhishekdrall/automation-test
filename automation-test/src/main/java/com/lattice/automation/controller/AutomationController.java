@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class AutomationController {
     private AutomationService automationService;
 
     @PostMapping(value = "/automate",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadZipProjectFile(@RequestParam("file") final MultipartFile multipartFile) throws IOException, GenericException, InterruptedException {
+    public ResponseEntity<?> uploadZipProjectFile(@RequestParam("file") final MultipartFile multipartFile) throws IOException, GenericException, InterruptedException, SQLException {
         return automationService.automateProjectFile(multipartFile);
     }
 
